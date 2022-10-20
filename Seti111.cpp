@@ -32,18 +32,18 @@ int get_answer(int expgoods[3]) {
 }
 
 void listen(const string& file, int cursor) {
-    Buyer student{};
+    Buyer buyer{};
     while (true) {
         ifstream in(file, ios::binary);
         in.seekg(cursor);
-        in.read((char*)&student, sizeof(student));
+        in.read((char*)&buyer, sizeof(buyer));
         if (cursor < in.tellg()) {
-            answer = get_answer(student.expgoods);
-            cout << "Name: " << student.name << "\nSkidka v %: " << answer << "\n";
-            ofstream out("../clients/" + student.client_name + ".bin", ios::binary | ios::app);
+            answer = get_answer(buyer.expgoods);
+            cout << "Name: " << buyer.name << "\nSkidka v %: " << answer << "\n";
+            ofstream out("../clients/" + buyer.client_name + ".bin", ios::binary | ios::app);
             out.write((char*)&answer, sizeof(answer));
             out.close();
-            cursor += sizeof(student);
+            cursor += sizeof(buyer);
         }
         in.close();
     }
