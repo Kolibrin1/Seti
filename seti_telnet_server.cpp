@@ -16,7 +16,7 @@ u_short MY_PORT = 666;  // Порт, который слушает сервер
 DWORD WINAPI ConToClient(LPVOID client_socket);
 // глобальная переменная – количество  активных пользователей 
 int nclients = 0;
-struct BodyData
+struct BuyerData
 {
     int id;
     string name;
@@ -90,7 +90,7 @@ DWORD WINAPI ConToClient(LPVOID client_socket)
     int len;
     my_sock = ((SOCKET*)client_socket)[0];
     char buff[1024];
-    char sHELLO[] = "Hello, Student \r\n";
+    char sHELLO[] = "Hello, Buyer \r\n";
     send(my_sock, sHELLO, sizeof(sHELLO), 0);
     // отправляем клиенту приветствие 
      // цикл эхо: прием строки и  возвращение ее клиенту
@@ -100,7 +100,7 @@ DWORD WINAPI ConToClient(LPVOID client_socket)
         buff[len] = '\0';    
         cout << "getted:" << buff << endl;
         istringstream s(buff);
-        BodyData bD;
+        BuyerData bD;
         s >> bD.id;
         s >> bD.name;
         s >> bD.maxprice[0];
