@@ -18,8 +18,7 @@ DWORD WINAPI ConToClient(LPVOID client_socket);
 int nclients = 0;
 struct BuyerData
 {
-    int id;
-    string name;
+    string sername;
     int maxprice[3];
     string skidka;
 };
@@ -90,7 +89,7 @@ DWORD WINAPI ConToClient(LPVOID client_socket)
     int len;
     my_sock = ((SOCKET*)client_socket)[0];
     char buff[1024];
-    char sHELLO[] = "Hello, Buyer \r\n";
+    char sHELLO[] = "Hello, Buyer, send me your sername and 3 maxprice goods \r\n";
     send(my_sock, sHELLO, sizeof(sHELLO), 0);
     // отправляем клиенту приветствие 
      // цикл эхо: прием строки и  возвращение ее клиенту
@@ -101,30 +100,32 @@ DWORD WINAPI ConToClient(LPVOID client_socket)
         cout << "getted:" << buff << endl;
         istringstream s(buff);
         BuyerData bD;
-        s >> bD.id;
-        s >> bD.name;
+        s >> bD.sername;
         s >> bD.maxprice[0];
         s >> bD.maxprice[1];
         s >> bD.maxprice[2];
 
 
         double avg = (bD.maxprice[0] + bD.maxprice[1] + bD.maxprice[2])/3;
-
-        if (avg > 3000 ) {
+        int avg_const = 0;
+        if (avg >= 3000 ) {
             bD.skidka = "20%";
+            avg_const = 3000;
         }
-        else if (avg > 2000) {
+        else if (avg >= 2000) {
             bD.skidka = "15%";
+            avg_const = 2000;
         }
         else if (avg >= 1000) {
             bD.skidka = "10%";
+            avg_const = 1000;
         }
         else{
             bD.skidka = "скидки нет";
         }
         string answ;
         if(avg >= 1000)
-            answ = "Так как средняя цена товаров = " + to_string((int)avg) + ", то скидка составит " + bD.skidka;
+            answ = "Так как средняя цена товаров = " + to_string((int)avg) + " >= " + to_string((int)avg_const) + ", то скидка составит " + bD.skidka;
         else
             answ = "Так как средняя цена товаров = " + to_string((int)avg) + " < 1000, то " + bD.skidka;
         send(my_sock, answ.c_str(), answ.size(), 0);
