@@ -116,13 +116,17 @@ DWORD WINAPI ConToClient(LPVOID client_socket)
         else if (avg > 2000) {
             bD.skidka = "15%";
         }
-        else if (avg > 1000) {
+        else if (avg >= 1000) {
             bD.skidka = "10%";
         }
         else{
-            bD.skidka = "Нет скидки";
+            bD.skidka = "скидки нет";
         }
-        string answ = "Так как средняя цена товаров = " + to_string((int)avg) + ", то скидка составит " + bD.skidka;
+        string answ;
+        if(avg >= 1000)
+            answ = "Так как средняя цена товаров = " + to_string((int)avg) + ", то скидка составит " + bD.skidka;
+        else
+            answ = "Так как средняя цена товаров = " + to_string((int)avg) + " < 1000, то " + bD.skidka;
         send(my_sock, answ.c_str(), answ.size(), 0);
     }
     // произошел выход из цикла, соединение c клиентом разорвано
